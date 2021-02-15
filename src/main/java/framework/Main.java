@@ -9,6 +9,6 @@ public class Main {
         Framework framework = new Framework(beansUrl);
         Class<?> clazz = Class.forName(args[0]);
         Object instance = framework.instantiate(clazz);
-        System.out.println(instance);
+        System.out.println(clazz.getMethod(args[1]).invoke(instance));
     }
 }
