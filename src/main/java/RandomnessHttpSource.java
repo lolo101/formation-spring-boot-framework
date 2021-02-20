@@ -1,11 +1,16 @@
+import framework.annotation.Lunatic;
+import framework.annotation.Polite;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+@Lunatic
 public class RandomnessHttpSource implements RandomnessSource {
     @Override
+    @Polite(after = "Bonne journée !")
     public double nextUniformRandom() {
         try {
             HttpRequest request = HttpRequest

@@ -1,5 +1,6 @@
 package framework;
 
+import framework.annotation.*;
 import framework.util.Try;
 import framework.util.Try.Status;
 
@@ -9,6 +10,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -20,6 +22,10 @@ public class Framework {
 
     private static final Logger LOGGER = Logger.getLogger(Framework.class.getName());
     private final List<Class> descriptors;
+    private final List<Proxyfier<?>> proxyfiers = Arrays.asList(
+            new Proxyfier<>(Lunatic.class, new LunaticLifecycle()),
+            new Proxyfier<>(Polite.class, new PoliteLifecycle())
+    );
 
     public Framework(URL beansUrl) throws IOException, URISyntaxException {
         Path beans = Path.of(beansUrl.toURI());
@@ -54,9 +60,18 @@ public class Framework {
         Class<?>[] parameterTypes = constructor.getParameterTypes();
         Object[] arguments = new Object[parameterTypes.length];
         for (int i = 0; i < arguments.length; ++i) {
-            arguments[i] = instantiate(findClass(parameterTypes[i]));
+            arguments[i] = proxyfy(parameterTypes[i]);
         }
         return constructor.newInstance(arguments);
+    }
+
+    private Object proxyfy(Class<?> interfaceClazz) throws Exception {
+        Class<?> clazz = findClass(interfaceClazz);
+        Object instance = instantiate(clazz);
+        return proxyfiers.stream()
+                .map(proxyfier -> proxyfier.proxify(interfaceClazz, instance))
+                .reduce(FrameworkProxy.NoProxy(interfaceClazz, instance), FrameworkProxy::compose)
+                .proxyInstance();
     }
 
     private Class<?> findClass(Class<?> type) throws Exception {
