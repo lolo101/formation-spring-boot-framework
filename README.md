@@ -13,3 +13,6 @@ Début de framework maison. Le code devient testable. Le framework est encore sp
 
 ### reflexion
 Le framework fait usage de reflexion, il peut être générique et séparé dans une librairie réutilisable.
+
+### proxy
+Le framework propose des annotations pour enrichir le comportement des beans et utilise les proxy dynamiques du JDK pour les exploiter
