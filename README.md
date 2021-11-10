@@ -5,11 +5,14 @@ Ce projet a pour but de montrer les principes de fonctionnement d'un framework
 
 ## Branches
 
-###main
+### main
 Un projet basique, sans injection et intestable.
 
-###dependency-injection
+### dependency-injection
 Début de framework maison. Le code devient testable. Le framework est encore spécifique au projet
 
-###reflexion
+### reflexion
 Le framework fait usage de reflexion, il peut être générique et séparé dans une librairie réutilisable.
+
+### proxy
+Le framework propose des annotations pour enrichir le comportement des beans et utilise les proxy dynamiques du JDK pour les exploiter
